@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
@@ -9,7 +10,7 @@
 namespace fs = std::filesystem;
 
 #include "..\lib\argparse.hpp"
-#include "..\lib\mb.hpp"
+#include "..\lib\mb\mb.hpp"
 
 
 int main(int argc, char* argv[])
