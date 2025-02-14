@@ -5,12 +5,12 @@
 #include <sstream>
 #include <string>
 #include <array>
-#include <unordered_map>
 
 namespace fs = std::filesystem;
 
 #include "..\lib\argparse.hpp"
-#include "..\lib\mb\mb.hpp"
+
+#include "huff.hpp"
 
 
 int main(int argc, char* argv[])
@@ -44,23 +44,9 @@ int main(int argc, char* argv[])
     }
 
     // Create a frequency map
-    std::unordered_map<std::string, int> frequencies;
-    char c { in.peek() };
-    do
-    {
-        // Get a character.
-        std::string key { mb::read_character(in) };
-        // std::cout << key << " | ";
-        c = in .peek();
-        // Update frequencies map.
-        if ( frequencies.contains(key) ) frequencies.at(key) += 1;
-        else frequencies.insert({key, 1});
-    } while ( !in.eof() );
+    auto frequencies { count_frequencies(in) };
     for ( const auto [character, frequency] : frequencies )
-    {
         std::cout << character << ": " << frequency << '\n';
-    }
-
 
     return 0;
 }
