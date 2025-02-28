@@ -40,7 +40,7 @@ void encode_and_decode(fs::directory_entry file, fs::path tmp)
         std::cerr << "Could not open the file " << fs::absolute(tmp_file) << ".";
         return;
     }
-    // ASSERT_TRUE( compare_files(original, processed) )
+    ASSERT_TRUE( compare_files(original, processed) )
     original.close();
     processed.close();
 }
