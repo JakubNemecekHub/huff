@@ -206,12 +206,17 @@ fs::path final_output_(const fs::path& input, fs::path output, std::string_view 
     return output;
 }
 
-void encode_file(const fs::path& input, fs::path output)
+struct Flags
+{
+    bool force { false };
+};
+
+void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
 {
     if ( input.extension() != ".txt" )
         throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input.extension().string() + "\".");
     output = final_output_(input, output, "hz");
-    if ( fs::exists(output) )
+    if ( fs::exists(output) && !flags.force )
     {
         bool query_result { true };
         do
@@ -242,12 +247,12 @@ void encode_file(const fs::path& input, fs::path output)
 }
 
 
-void decode_file(const fs::path& input, fs::path output)
+void decode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
 {
     if ( input.extension() != ".hz" )
         throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input.extension().string() + "\".");
     output = final_output_(input, output, "txt");
-    if ( fs::exists(output) )
+    if ( fs::exists(output) && !flags.force )
     {
         bool query_result { true };
         do

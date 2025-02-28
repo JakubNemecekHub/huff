@@ -26,8 +26,8 @@ void encode_and_decode(fs::directory_entry file, fs::path tmp)
     auto tmp_file { tmp / file.path().filename() };
     auto archive_name { file.path().filename().replace_extension(".hz") };
     auto archive { tmp / archive_name };
-    encode_file(file.path(), archive);
-    decode_file(archive, tmp_file);
+    encode_file(file.path(), archive, Flags{true});
+    decode_file(archive, tmp_file, Flags{true});
     auto original { std::ifstream(file.path(), std::ios::binary ) };
     if ( !original.is_open() )
     {

@@ -34,6 +34,9 @@ int main(int argc, char* argv[])
 
     program.add_argument("-o", "--output")
         .help("Specify output file.");
+    program.add_argument("-f", "--force")
+        .help("Overwrite existing files without asking.")
+        .flag();
     program.add_argument("file")
         .help("Input file");
 
@@ -48,6 +51,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    // Flags
+    Flags flags;
+    flags.force = program.get<bool>("-f");
+
     std::string input_ { program.get<std::string>("file") };
     fs::path input     { fs::path(input_)                 };
     fs::path output;
@@ -57,7 +64,7 @@ int main(int argc, char* argv[])
     {
         try
         {
-            encode_file(input, output);
+            encode_file(input, output, flags);
         }
         catch(const std::exception& e)
         {
@@ -69,7 +76,7 @@ int main(int argc, char* argv[])
     {
         try
         {
-            decode_file(input, output);
+            decode_file(input, output, flags);
         }
         catch(const std::exception& e)
         {
