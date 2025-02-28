@@ -196,7 +196,6 @@ void decode(std::ifstream& in, std::ofstream& out, tree::Node<Point>& tree)
 
 void encode_file(const fs::path& input_file, fs::path output_file)
 {
-    // Check that file's extension is .txt
     if ( input_file.extension() != ".txt" )
         throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input_file.extension().string() + "\".");
     output_file.replace_extension("hz");
@@ -218,9 +217,9 @@ void encode_file(const fs::path& input_file, fs::path output_file)
     auto out { std::ofstream(output_file, std::ios::binary ) };
     if ( !out.is_open() )
         throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
-    auto frequencies { count_frequencies(in)      };  // Create a frequency map
-    auto tree        { generate_tree(frequencies) };  // Turn frequencies into a Huffman tree
-    auto codes       { generate_codes(tree)       };  // Create Prefix-code table out of the Huffman tree
+    auto frequencies { count_frequencies(in)      };
+    auto tree        { generate_tree(frequencies) };
+    auto codes       { generate_codes(tree)       };
     in.clear();
     in.seekg(0);
     write_header(out, frequencies);
@@ -233,7 +232,6 @@ void encode_file(const fs::path& input_file, fs::path output_file)
 
 void decode_file(const fs::path& input_file, fs::path output_file)
 {
-    // Check that file's extension is .hz
     if ( input_file.extension() != ".hz" )
         throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input_file.extension().string() + "\".");
     output_file.replace_extension("txt");
@@ -255,8 +253,8 @@ void decode_file(const fs::path& input_file, fs::path output_file)
     auto out { std::ofstream(output_file, std::ios::binary ) };
     if ( !out.is_open() )
         throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
-    auto frequencies { read_header(in)            };  // Read frequencies from header of the archive
-    auto tree        { generate_tree(frequencies) };  // Turn frequencies into a Huffman tree
+    auto frequencies { read_header(in)            };
+    auto tree        { generate_tree(frequencies) };
     decode(in, out, tree);
     in.close();
     out.close();
