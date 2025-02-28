@@ -189,23 +189,6 @@ void decode(std::ifstream& in, std::ofstream& out, tree::Node<Point>& tree)
     } while ( in );
 }
 
-
-fs::path final_output_(const fs::path& input, fs::path output, std::string_view ext)
-{
-    if ( output.has_extension() )
-    {
-        output.replace_extension(ext);
-    }
-    else if ( ( output.native().back() == fs::path::preferred_separator ) ||
-              fs::is_directory(output) )
-    {
-        auto output_file { input.filename() };
-        output_file.replace_extension(ext);
-        output /= output_file;
-    }
-    return output;
-}
-
 struct Flags
 {
     bool force { false };
@@ -225,6 +208,24 @@ bool user_input_(bool condition, std::string question)
         else if ( answer != 'Y' && answer != 'y' ) query_result = false;
     } while ( !query_result );
     return true;
+}
+
+fs::path final_output_(const fs::path& input, fs::path output, std::string ext)
+{
+    if ( output.has_extension() )
+    {
+        if ( user_input_(output.extension() != ext,
+                         "Change file extension \"" + output.extension().string() + "\" to default \"." + ext + "\"?"))
+            output.replace_extension(ext);
+    }
+    else if ( ( output.native().back() == fs::path::preferred_separator ) ||
+              fs::is_directory(output) )
+    {
+        auto output_file { input.filename() };
+        output_file.replace_extension(ext);
+        output /= output_file;
+    }
+    return output;
 }
 
 void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
