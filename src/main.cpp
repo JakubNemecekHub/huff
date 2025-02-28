@@ -63,7 +63,6 @@ int main(int argc, char* argv[])
     fs::path input     { fs::path(input_)                 };
     fs::path output;
     if ( auto user_output = program.present("-o") ) output = fs::path(program.get<std::string>("-o"));
-    else                                            output = input;
     if ( program.get<bool>("-e") )
     {
         try

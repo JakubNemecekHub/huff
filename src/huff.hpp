@@ -212,9 +212,15 @@ bool user_input_(bool condition, std::string question)
 
 fs::path final_output_(const fs::path& input, fs::path output, std::string ext)
 {
-    if ( output.has_extension() )
+    if ( output.empty() )
     {
-        if ( user_input_(output.extension() != ext,
+        output = input;
+        output.replace_extension(ext);
+        return output;
+    }
+    else if ( output.has_extension() )
+    {
+        if ( user_input_(output.extension() != ("." + ext),
                          "Change file extension \"" + output.extension().string() + "\" to default \"." + ext + "\"?"))
             output.replace_extension(ext);
     }
