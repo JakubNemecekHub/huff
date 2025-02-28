@@ -170,7 +170,7 @@ void decode(std::ifstream& in, std::ofstream& out, tree::Node<Point>& tree)
         while ( buffer_counter < BUFFER_SIZE )
         {
             auto* res { decode_(buffer, buffer_counter, it) };
-            if ( res->data.character == "" )
+            if ( res->data.character.empty() )
             {
                 it = res;
                 continue;
