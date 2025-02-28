@@ -8,6 +8,8 @@
 #include <string>
 #include <bitset>
 
+#include <vector>
+
 
 namespace mb
 {
@@ -89,14 +91,15 @@ std::string hex(std::string_view s, bool prefix = false)
 */
 std::string bin(char c, bool prefix = false)
 {
-    return (prefix ? "0b" : "") + std::bitset<CHAR_BIT>{c}.to_string();
+    // auto cc { static_cast<unsigned long long>(c) };
+    return (prefix ? "0b" : "") + std::bitset<CHAR_BIT>{static_cast<unsigned long long>(c)}.to_string();
 }
 std::string bin(std::string_view s, bool prefix = false)
 {
     std::string res;
     for(auto c : s)
     {
-        res += (prefix ? "0b" : "") + std::bitset<CHAR_BIT>{static_cast<int>(c)}.to_string() + " ";
+        res += (prefix ? "0b" : "") + std::bitset<CHAR_BIT>{static_cast<unsigned long long>(c)}.to_string() + " ";
     }
     res.pop_back();
     return res;
@@ -107,9 +110,9 @@ std::string bin(std::string_view s, bool prefix = false)
 */
 std::string read_character(std::ifstream& in, size_t bytes)
 {
-    char cs[bytes];
-    in.read(cs, bytes);
-    return std::string{ cs, bytes };
+    std::vector<char> vec (bytes);
+    in.read(vec.data(), bytes);
+    return std::string{ vec.data(), bytes };
 }
 /*
     Read one UTF-8 character.
@@ -117,7 +120,7 @@ std::string read_character(std::ifstream& in, size_t bytes)
 std::string read_character(std::ifstream& in)
 {
     size_t size { 0 };
-    char c { in.peek() };
+    char c { static_cast<char>(in.peek()) };
     while ( c & 0b100000000 )
     {
         c <<= 1;

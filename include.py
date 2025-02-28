@@ -16,4 +16,6 @@ def include(lib: str, target: str = "lib") -> None:
 
 if __name__ == "__main__":
     include(r"C:\Workspace\cpp\mb")
+    include(r"C:\Workspace\cpp\tree")
+    include(r"C:\Workspace\cpp\heap")
     include(r"C:\Workspace\cpp\ts", r"test\lib")

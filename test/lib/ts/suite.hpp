@@ -43,7 +43,7 @@ public:
         int passed { 0 };
         int failed { 0 };
         std::cout << "Running tests from " << CYAN << name_ << RESET <<'\n';
-        for ( const auto [message, test] : tests_ )
+        for ( const auto& [message, test] : tests_ )
         {
             try
             {
@@ -84,16 +84,6 @@ public:
     } NAME(test_registrar_);                                   \
     void NAME(TestFunction_)()
 
-#define ASSERT(condition, message)                                      \
-if ( !(condition) )                                                     \
-{                                                                       \
-    std::ostringstream oss;                                             \
-    oss << "\n\t" << ts::RED << " [ASSERTION FAILED] " << ts::RESET     \
-        << #condition                                                   \
-        << "\n\t" << ts::RED << " [MESSAGE] " << ts::RESET << message;  \
-    throw std::runtime_error(oss.str());                                \
-}
-
 #define ASSERT_TRUE(condition)                                        \
 if ( !(condition) )                                                   \
 {                                                                     \
@@ -117,18 +107,28 @@ if ( !(lhs == rhs) )                                                   \
 {                                                                      \
     std::ostringstream oss;                                            \
     oss << "\n\t" << ts::RED << "[ASSERT EQUAL failed] " << ts::RESET  \
-    << #lhs << " == " << #rhs;                                         \
+        << #lhs << " == " << #rhs                                      \
+        << "\n\t" << "[VALUES] " << lhs << ", and " << rhs;            \
     throw std::runtime_error(oss.str());                               \
 }
 
-#define EXPECT(tested, expected)                                      \
-if ( !(tested == expected) )                                          \
-{                                                                     \
-    std::ostringstream oss;                                           \
-    oss << "\n\t" << ts::RED << "[EXPECTED failed] " << ts::RESET     \
-    << "Expected \"" << expected << "\", got \"" << tested << "\".";  \
-    throw std::runtime_error(oss.str());                              \
+#define ASSERT_EQ_M(lhs, rhs)                                          \
+if ( !(lhs == rhs) )                                                   \
+{                                                                      \
+    std::ostringstream oss;                                            \
+    oss << "\n\t" << ts::RED << "[ASSERT EQUAL failed] " << ts::RESET  \
+        << #lhs << " == " << #rhs;                                     \
+    throw std::runtime_error(oss.str());                               \
 }
 
+#define ASSERT_NEQ(lhs, rhs)                                               \
+if ( !(lhs != rhs) )                                                       \
+{                                                                          \
+    std::ostringstream oss;                                                \
+    oss << "\n\t" << ts::RED << "[ASSERT NOT EQUAL failed] " << ts::RESET  \
+        << #lhs << " != " << #rhs                                          \
+        << "\n\t" << "[VALUES] " << lhs << ", and " << rhs;                \
+    throw std::runtime_error(oss.str());                                   \
+}
 
 }  // namespace ts
