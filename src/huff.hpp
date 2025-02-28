@@ -212,23 +212,29 @@ struct Flags
     bool mute  { false };
 };
 
+bool user_input_(bool condition, std::string question)
+{
+    if ( !condition ) return true;
+    bool query_result { true };
+    do
+    {
+        std::cout << question << " [Y]es, [N]o ";
+        char answer;
+        std::cin >> answer;
+        if      ( answer == 'N' ||answer == 'n'  ) return false;
+        else if ( answer != 'Y' && answer != 'y' ) query_result = false;
+    } while ( !query_result );
+    return true;
+}
+
 void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
 {
     if ( input.extension() != ".txt" )
         throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input.extension().string() + "\".");
     output = final_output_(input, output, "hz");
-    if ( fs::exists(output) && !flags.force )
-    {
-        bool query_result { true };
-        do
-        {
-            std::cout << "File " << output << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
-            char answer;
-            std::cin >> answer;
-            if      ( answer == 'N' ||answer == 'n'  ) return;
-            else if ( answer != 'Y' && answer != 'y' ) query_result = false;
-        } while ( !query_result );
-    }
+    if ( !user_input_(fs::exists(output) && !flags.force,
+                      "File\" " + output.string() + "\" already exists. Do you want to overwrite it?") )
+        return;
     auto in { std::ifstream(input, std::ios::binary ) };
     if ( !in.is_open() )
         throw std::runtime_error("Could not open file \"" + fs::absolute(input).string() + "\".");
@@ -253,18 +259,9 @@ void decode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
     if ( input.extension() != ".hz" )
         throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input.extension().string() + "\".");
     output = final_output_(input, output, "txt");
-    if ( fs::exists(output) && !flags.force )
-    {
-        bool query_result { true };
-        do
-        {
-            std::cout << "File " << output << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
-            char answer;
-            std::cin >> answer;
-            if      ( answer == 'N' ||answer == 'n'  ) return;
-            else if ( answer != 'Y' && answer != 'y' ) query_result = false;
-        } while ( !query_result );
-    }
+    if ( !user_input_(fs::exists(output) && !flags.force,
+                      "File \"" + output.string() + "\" already exists. Do you want to overwrite it?") )
+        return;
     auto in { std::ifstream(input, std::ios::binary ) };
     if ( !in.is_open() )
         throw std::runtime_error("Could not open file \"" + fs::absolute(input).string() + "\".");
