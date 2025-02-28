@@ -131,4 +131,18 @@ if ( !(lhs != rhs) )                                                       \
     throw std::runtime_error(oss.str());                                   \
 }
 
+#define ASSERT_THROWS(expression)                                      \
+try                                                                    \
+{                                                                      \
+    expression;                                                        \
+    std::ostringstream oss;                                            \
+    oss << "\n\t" << ts::RED << "[ASSERT THROWS failed]" << ts::RESET  \
+        << #expression << " didn't throw";                             \
+    throw std::runtime_error(oss.str());                               \
+}                                                                      \
+catch (...)                                                            \
+{                                                                      \
+    /* Exception was thrown as expected. */                            \
+}                                                                      \
+
 }  // namespace ts

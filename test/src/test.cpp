@@ -20,6 +20,7 @@ int main()
     tester.add(tests_header, "Tests Header");
     tester.add(tests_frequencies, "Tests frequencies");
     tester.add(tests_data, "Test creation of frequencies, tree and codes.");
+    tester.add(tests_files, "Test opening of files.");
     tester.run();
 
 }

@@ -198,10 +198,7 @@ void encode_file(const fs::path& input_file, fs::path output_file)
 {
     // Check that file's extension is .txt
     if ( input_file.extension() != ".txt" )
-    {
-        std::cout << "Wrong file format. Expected \".txt\". Got " << input_file.extension() << ".\n";
-        return;
-    }
+        throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input_file.extension().string() + "\".");
     output_file.replace_extension("hz");
     if ( fs::exists(output_file) )
     {
@@ -217,16 +214,10 @@ void encode_file(const fs::path& input_file, fs::path output_file)
     }
     auto in { std::ifstream(input_file, std::ios::binary ) };
     if ( !in.is_open() )
-    {
-        std::cerr << "Could not open the file " << fs::absolute(input_file) << ".";
-        return;
-    }
+        throw std::runtime_error("Could not open file \"" + fs::absolute(input_file).string() + "\".");
     auto out { std::ofstream(output_file, std::ios::binary ) };
     if ( !out.is_open() )
-    {
-        std::cerr << "Could not open the file " << fs::absolute(output_file) << ".";
-        return;
-    }
+        throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
     auto frequencies { count_frequencies(in)      };  // Create a frequency map
     auto tree        { generate_tree(frequencies) };  // Turn frequencies into a Huffman tree
     auto codes       { generate_codes(tree)       };  // Create Prefix-code table out of the Huffman tree
@@ -244,10 +235,7 @@ void decode_file(const fs::path& input_file, fs::path output_file)
 {
     // Check that file's extension is .hz
     if ( input_file.extension() != ".hz" )
-    {
-        std::cout << "Wrong file format. Expected \".hz\". Got " << input_file.extension() << ".\n";
-        return;
-    }
+        throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input_file.extension().string() + "\".");
     output_file.replace_extension("txt");
     if ( fs::exists(output_file) )
     {
@@ -263,16 +251,10 @@ void decode_file(const fs::path& input_file, fs::path output_file)
     }
     auto in { std::ifstream(input_file, std::ios::binary ) };
     if ( !in.is_open() )
-    {
-        std::cerr << "Could not open the file " << fs::absolute(input_file) << ".";
-        return;
-    }
+        throw std::runtime_error("Could not open file \"" + fs::absolute(input_file).string() + "\".");
     auto out { std::ofstream(output_file, std::ios::binary ) };
     if ( !out.is_open() )
-    {
-        std::cerr << "Could not open the file " << fs::absolute(output_file) << ".";
-        return;
-    }
+        throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
     auto frequencies { read_header(in)            };  // Read frequencies from header of the archive
     auto tree        { generate_tree(frequencies) };  // Turn frequencies into a Huffman tree
     decode(in, out, tree);

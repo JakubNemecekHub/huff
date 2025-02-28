@@ -53,8 +53,31 @@ int main(int argc, char* argv[])
     fs::path output_file;
     if ( auto user_output = program.present("-o") ) output_file = fs::path(program.get<std::string>("-o"));
     else                                            output_file = input_file;
-    if      ( program.get<bool>("-e") ) encode_file(input_file, output_file);
-    else if ( program.get<bool>("-d") ) decode_file(input_file, output_file);
+    if      ( program.get<bool>("-e") )
+    {
+        try
+        {
+            encode_file(input_file, output_file);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            return 1;
+        }
+    }
+    else if ( program.get<bool>("-d") )
+    {
+        try
+        {
+            decode_file(input_file, output_file);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            return 1;
+        }
+
+    }
 
     return 0;
 }
