@@ -234,7 +234,7 @@ void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
         throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input.extension().string() + "\".");
     output = final_output_(input, output, "hz");
     if ( !user_input_(fs::exists(output) && !flags.force,
-                      "File\" " + output.string() + "\" already exists. Do you want to overwrite it?") )
+                      "File \"" + output.string() + "\" already exists. Do you want to overwrite it?") )
         return;
     auto in { std::ifstream(input, std::ios::binary ) };
     if ( !in.is_open() )
