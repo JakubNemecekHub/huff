@@ -48,16 +48,16 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::string input_file_ { program.get<std::string>("file") };
-    fs::path input_file     { fs::path(input_file_)            };
-    fs::path output_file;
-    if ( auto user_output = program.present("-o") ) output_file = fs::path(program.get<std::string>("-o"));
-    else                                            output_file = input_file;
+    std::string input_ { program.get<std::string>("file") };
+    fs::path input     { fs::path(input_)                 };
+    fs::path output;
+    if ( auto user_output = program.present("-o") ) output = fs::path(program.get<std::string>("-o"));
+    else                                            output = input;
     if ( program.get<bool>("-e") )
     {
         try
         {
-            encode_file(input_file, output_file);
+            encode_file(input, output);
         }
         catch(const std::exception& e)
         {
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     {
         try
         {
-            decode_file(input_file, output_file);
+            decode_file(input, output);
         }
         catch(const std::exception& e)
         {

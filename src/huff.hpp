@@ -190,29 +190,45 @@ void decode(std::ifstream& in, std::ofstream& out, tree::Node<Point>& tree)
 }
 
 
-void encode_file(const fs::path& input_file, fs::path output_file)
+fs::path final_output_(const fs::path& input, fs::path output, std::string_view ext)
 {
-    if ( input_file.extension() != ".txt" )
-        throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input_file.extension().string() + "\".");
-    output_file.replace_extension("hz");
-    if ( fs::exists(output_file) )
+    if ( output.has_extension() )
+    {
+        output.replace_extension(ext);
+    }
+    else if ( ( output.native().back() == fs::path::preferred_separator ) ||
+              fs::is_directory(output) )
+    {
+        auto output_file { input.filename() };
+        output_file.replace_extension(ext);
+        output /= output_file;
+    }
+    return output;
+}
+
+void encode_file(const fs::path& input, fs::path output)
+{
+    if ( input.extension() != ".txt" )
+        throw std::runtime_error("Wrong file format. Expected \".txt\". Got \"" + input.extension().string() + "\".");
+    output = final_output_(input, output, "hz");
+    if ( fs::exists(output) )
     {
         bool query_result { true };
         do
         {
-            std::cout << "File " << output_file << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
+            std::cout << "File " << output << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
             char answer;
             std::cin >> answer;
             if      ( answer == 'N' ||answer == 'n'  ) return;
             else if ( answer != 'Y' && answer != 'y' ) query_result = false;
         } while ( !query_result );
     }
-    auto in { std::ifstream(input_file, std::ios::binary ) };
+    auto in { std::ifstream(input, std::ios::binary ) };
     if ( !in.is_open() )
-        throw std::runtime_error("Could not open file \"" + fs::absolute(input_file).string() + "\".");
-    auto out { std::ofstream(output_file, std::ios::binary ) };
+        throw std::runtime_error("Could not open file \"" + fs::absolute(input).string() + "\".");
+    auto out { std::ofstream(output, std::ios::binary ) };
     if ( !out.is_open() )
-        throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
+        throw std::runtime_error("Could not open file \"" + fs::absolute(output).string() + "\".");
     auto frequencies { count_frequencies(in)      };
     auto tree        { generate_tree(frequencies) };
     auto codes       { generate_codes(tree)       };
@@ -222,37 +238,37 @@ void encode_file(const fs::path& input_file, fs::path output_file)
     encode(in, out, codes);
     in.close();
     out.close();
-    std::cout << "File archived into " << output_file << ".\n";
+    std::cout << "File archived into " << output << ".\n";
 }
 
 
-void decode_file(const fs::path& input_file, fs::path output_file)
+void decode_file(const fs::path& input, fs::path output)
 {
-    if ( input_file.extension() != ".hz" )
-        throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input_file.extension().string() + "\".");
-    output_file.replace_extension("txt");
-    if ( fs::exists(output_file) )
+    if ( input.extension() != ".hz" )
+        throw std::runtime_error("Wrong file format. Expected \".hz\". Got \"" + input.extension().string() + "\".");
+    output = final_output_(input, output, "txt");
+    if ( fs::exists(output) )
     {
         bool query_result { true };
         do
         {
-            std::cout << "File " << output_file << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
+            std::cout << "File " << output << " already exists. Do you want to overwrite it? [Y]es, [N]o ";
             char answer;
             std::cin >> answer;
             if      ( answer == 'N' ||answer == 'n'  ) return;
             else if ( answer != 'Y' && answer != 'y' ) query_result = false;
         } while ( !query_result );
     }
-    auto in { std::ifstream(input_file, std::ios::binary ) };
+    auto in { std::ifstream(input, std::ios::binary ) };
     if ( !in.is_open() )
-        throw std::runtime_error("Could not open file \"" + fs::absolute(input_file).string() + "\".");
-    auto out { std::ofstream(output_file, std::ios::binary ) };
+        throw std::runtime_error("Could not open file \"" + fs::absolute(input).string() + "\".");
+    auto out { std::ofstream(output, std::ios::binary ) };
     if ( !out.is_open() )
-        throw std::runtime_error("Could not open file \"" + fs::absolute(output_file).string() + "\".");
+        throw std::runtime_error("Could not open file \"" + fs::absolute(output).string() + "\".");
     auto frequencies { read_header(in)            };
     auto tree        { generate_tree(frequencies) };
     decode(in, out, tree);
     in.close();
     out.close();
-    std::cout << "File extracted into " << output_file << ".\n";
+    std::cout << "File extracted into " << output << ".\n";
 }
