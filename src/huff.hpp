@@ -35,10 +35,6 @@ struct Point
     {
         return frequency <=> other.frequency;
     }
-    auto operator>(const Point& other) const
-    {
-        return frequency > other.frequency;
-    }
     bool operator==(const Point& other) const
     {
         return frequency == other.frequency;
