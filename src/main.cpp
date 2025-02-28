@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     fs::path output_file;
     if ( auto user_output = program.present("-o") ) output_file = fs::path(program.get<std::string>("-o"));
     else                                            output_file = input_file;
-    if      ( program.get<bool>("-e") )
+    if ( program.get<bool>("-e") )
     {
         try
         {
