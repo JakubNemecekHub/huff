@@ -14,7 +14,6 @@ ts::Suite tests_header { "Test writing and reading the header." };
 
 void inner_test(fs::directory_entry file, fs::path tmp)
 {
-    std::cout << "Testing " << file.path() << '\n';
     auto file_name_path { file.path().filename().replace_extension(".hz") };
     auto archive_file_path { tmp / file_name_path };
 

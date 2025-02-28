@@ -209,6 +209,7 @@ fs::path final_output_(const fs::path& input, fs::path output, std::string_view 
 struct Flags
 {
     bool force { false };
+    bool mute  { false };
 };
 
 void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
@@ -243,7 +244,7 @@ void encode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
     encode(in, out, codes);
     in.close();
     out.close();
-    std::cout << "File archived into " << output << ".\n";
+    if ( !flags.mute ) std::cout << "File archived into " << output << ".\n";
 }
 
 
@@ -275,5 +276,5 @@ void decode_file(const fs::path& input, fs::path output, Flags flags = Flags{})
     decode(in, out, tree);
     in.close();
     out.close();
-    std::cout << "File extracted into " << output << ".\n";
+    if ( !flags.mute ) std::cout << "File extracted into " << output << ".\n";
 }

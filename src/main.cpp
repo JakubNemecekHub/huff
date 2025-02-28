@@ -37,6 +37,9 @@ int main(int argc, char* argv[])
     program.add_argument("-f", "--force")
         .help("Overwrite existing files without asking.")
         .flag();
+    program.add_argument("-m", "--mute")
+        .help("Mute input to standard output.")
+        .flag();
     program.add_argument("file")
         .help("Input file");
 
@@ -54,6 +57,7 @@ int main(int argc, char* argv[])
     // Flags
     Flags flags;
     flags.force = program.get<bool>("-f");
+    flags.mute = program.get<bool>("-m");
 
     std::string input_ { program.get<std::string>("file") };
     fs::path input     { fs::path(input_)                 };
