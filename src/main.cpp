@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 
     argparse::ArgumentParser program("huff", "1.0.0");
 
-    auto& group { program.add_mutually_exclusive_group() };
+    auto& group { program.add_mutually_exclusive_group(true) };
     group.add_argument("-e", "--encode")
         .help("Encode text file into archive.")
         .flag();
