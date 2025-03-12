@@ -5,6 +5,26 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <concepts>
+
+/*
+    Concept of a streamable type
+*/
+template<typename T>
+concept Streamable = requires(std::ostream& os, T value)
+{
+    { os << value } -> std::same_as<std::ostream&>;
+};
+template <typename T>
+std::string to_string_if_streamable(const T& value) {
+    if constexpr (Streamable<T>) {
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
+    } else {
+        return "(non-streamable type)";
+    }
+}
 
 
 namespace ts
@@ -108,16 +128,8 @@ if ( !(lhs == rhs) )                                                   \
     std::ostringstream oss;                                            \
     oss << "\n\t" << ts::RED << "[ASSERT EQUAL failed] " << ts::RESET  \
         << #lhs << " == " << #rhs                                      \
-        << "\n\t" << "[VALUES] " << lhs << ", and " << rhs;            \
-    throw std::runtime_error(oss.str());                               \
-}
-
-#define ASSERT_EQ_M(lhs, rhs)                                          \
-if ( !(lhs == rhs) )                                                   \
-{                                                                      \
-    std::ostringstream oss;                                            \
-    oss << "\n\t" << ts::RED << "[ASSERT EQUAL failed] " << ts::RESET  \
-        << #lhs << " == " << #rhs;                                     \
+        << "\n\t" << "[VALUES] " << to_string_if_streamable(lhs)       \
+                     << ", and " << to_string_if_streamable(rhs);      \
     throw std::runtime_error(oss.str());                               \
 }
 

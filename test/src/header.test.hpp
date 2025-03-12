@@ -47,7 +47,7 @@ void inner_test(fs::directory_entry file, fs::path tmp)
     auto header_frequencies { read_header(in_2) };
     in_2.close();
 
-    ASSERT_EQ_M( original_frequencies, header_frequencies )
+    ASSERT_EQ( original_frequencies, header_frequencies )
 
     auto original_tree { std::make_unique<tree::Node<Point>>(generate_tree(original_frequencies)) };
     auto header_tree { std::make_unique<tree::Node<Point>>(generate_tree(header_frequencies)) };
