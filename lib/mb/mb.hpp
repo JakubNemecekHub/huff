@@ -91,7 +91,6 @@ std::string hex(std::string_view s, bool prefix = false)
 */
 std::string bin(char c, bool prefix = false)
 {
-    // auto cc { static_cast<unsigned long long>(c) };
     return (prefix ? "0b" : "") + std::bitset<CHAR_BIT>{static_cast<unsigned long long>(c)}.to_string();
 }
 std::string bin(std::string_view s, bool prefix = false)

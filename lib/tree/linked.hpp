@@ -149,14 +149,15 @@ public:
         Public member functions
     */
 
-    void right(Node* child) { right_ = std::unique_ptr<Node<T>>(child); }
-    void right(std::unique_ptr<Node<T>> child)
+    std::unique_ptr<Node<T>>& right(std::unique_ptr<Node<T>>&& child)
     {
         right_ = std::move(child);
+        return right_;
     }
-    void right(Node<T>&& child)
+    std::unique_ptr<Node<T>>& right(Node<T>&& child)
     {
         right_ = std::make_unique<Node<T>>(std::forward<Node<T>&&>(child));
+        return right_;
     }
     std::unique_ptr<Node<T>>& right(T new_data)
     {
@@ -173,14 +174,15 @@ public:
     std::unique_ptr<Node<T>>& right() { return right_; }
     std::unique_ptr<Node<T>> release_right() { return std::move(right_); }
 
-    void left(Node* child) { left_ = std::unique_ptr<Node<T>>(child); }
-    void left(std::unique_ptr<Node<T>> child)
+    std::unique_ptr<Node<T>>& left(std::unique_ptr<Node<T>>&& child)
     {
         left_ = std::move(child);
+        return left_;
     }
-    void left(Node<T>&& child)
+    std::unique_ptr<Node<T>>& left(Node<T>&& child)
     {
         left_ = std::make_unique<Node<T>>(std::forward<Node<T>&&>(child));
+        return left_;
     }
     std::unique_ptr<Node<T>>& left(T new_data)
     {
